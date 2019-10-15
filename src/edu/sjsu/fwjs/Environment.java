@@ -4,13 +4,14 @@ import java.util.Map;
 import java.util.HashMap;
 
 public class Environment {
-    private Map<String,Value> env = new HashMap<String,Value>();
+    private Map<String, Value> env = new HashMap<String, Value>();
     private Environment outerEnv;
 
     /**
      * Constructor for global environment
      */
-    public Environment() {}
+    public Environment() {
+    }
 
     /**
      * Constructor for local environment of a function
@@ -27,7 +28,6 @@ public class Environment {
      * null is returned (similar to how JS returns undefined.
      */
     public Value resolveVar(String varName) {
-        //TODO: YOUR CODE HERE
         Environment currentEnv = this;
         Value currentVar = currentEnv.getVar(varName);
         while (currentVar == null && currentEnv.getOuterEnv() != null) {
@@ -37,7 +37,6 @@ public class Environment {
         if (currentVar == null) {
             return new NullVal();
         }
-
         return currentVar;
     }
 
@@ -49,7 +48,7 @@ public class Environment {
     public void updateVar(String key, Value v) {
         Environment currentEnv = this;
         // Check if the variable not found and not at global scope.
-        while(currentEnv.getVar(key) == null &&
+        while (currentEnv.getVar(key) == null &&
                 currentEnv.getOuterEnv() != null) {
             // Go to next scope.
             currentEnv = currentEnv.getOuterEnv();
@@ -64,11 +63,15 @@ public class Environment {
      * a RuntimeException is thrown.
      */
     public void createVar(String key, Value v) {
-        //TODO: YOUR CODE HERE
+        if (env.get(key) == null) {
+            env.put(key, v);
+        }
+        else throw new RuntimeException("Variable already defined");
     }
 
     /**
      * Gets variable from env HashMap.
+     *
      * @param varName variable to get.
      * @return variable value or null if it does not exist.
      */
@@ -78,8 +81,9 @@ public class Environment {
 
     /**
      * Sets a variable with a given key in the env HashMap.
+     *
      * @param key variable reference.
-     * @param v variable value.
+     * @param v   variable value.
      */
     public void setVar(String key, Value v) {
         env.put(key, v);
@@ -87,6 +91,7 @@ public class Environment {
 
     /**
      * Gets the Environment outside of this Environment.
+     *
      * @return the outer Environment or null if there is none.
      */
     public Environment getOuterEnv() {
