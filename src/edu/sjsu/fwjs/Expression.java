@@ -228,8 +228,7 @@ class FunctionDeclExpr implements Expression {
     }
 
     public Value evaluate(Environment env) {
-        //TODO: YOUR CODE HERE
-        return null;
+        return new ClosureVal(params, body, env);
     }
 }
 
@@ -239,15 +238,20 @@ class FunctionDeclExpr implements Expression {
 class FunctionAppExpr implements Expression {
     private Expression f;
     private List<Expression> args;
-
     public FunctionAppExpr(Expression f, List<Expression> args) {
         this.f = f;
         this.args = args;
     }
-
     public Value evaluate(Environment env) {
-        //TODO: YOUR CODE HERE
-        return null;
+        ClosureVal val = (ClosureVal) f.evaluate(env);	// Evaluate f expression to get ClosureVal
+        List<Value> evalArgs = new ArrayList<Value>();	// List to hold evaluated values.
+
+        // Add evaluated Expressions from args to evalArgs to be used in the function.
+        for(int i = 0; i < args.size(); i++) {
+            evalArgs.add(args.get(i).evaluate(env));
+        }
+        // Apply the evaluated Expressions to the val function.
+        return val.apply(evalArgs);
     }
 }
 
